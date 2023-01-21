@@ -1,0 +1,85 @@
+#!/bin/sh
+
+#$1 is the name of the file
+# File=$1
+
+# check that the number of arguments is 1 (Step 1)
+if [ $# -ne 1 ] ; then
+    echo "Num of args is not 1, exiting with exit(1)"
+    exit 1
+    fi
+
+
+# check that the file exists (Step 1)
+
+if test ! -r "$1" ; then
+    echo "$1 does NOT exists NOR is readable"
+    exit 1
+    fi
+
+# extract all of the Reader Messages (R) (Step 1)
+echo "Extrating Reader Messages"
+
+# grep pattern file1 file2 etc
+# ' > ' is syntax for output
+
+# testing for terminal output
+# grep "^\[[0-1];[0-9][0-9]mR" $1 
+
+# creates .Reader output file
+grep "^\[[0-1];[0-9][0-9]mR" $1 > $1.Reader 
+
+# add time range to end of file. (Step 3)
+headReader=`grep "^.\[[0-1];[0-9][0-9]mR" $1 | cut -b 11-20,22-27 | head -n 1` # skip byte 21, its the decimal
+echo $headReader
+tailReader=`grep "^.\[[0-1];[0-9][0-9]mR" $1 | cut -b 11-20,22-27 | tail -n 1` # skip byte 21, its the decimal
+echo $tailReader
+
+timeSpanR=$(($tailReader-$headReader))e-6
+echo $timeSpanR
+printf "Time Span: %.2f\n" $timeSpanR >> $1.Reader
+
+# extract all of the Printer Messages (P)  (Step 1)
+echo "Extrating Summary Printer Messages"
+
+# testing for terminal ouput
+# grep "^\[[0-1];[0-9][0-9]mP" $1 
+
+# creates .Printer output file
+grep "^\[[0-1];[0-9][0-9]mP" $1 > $1.Printer 
+
+
+# add time range to end of file. (Step 3)
+headPrinter=`grep "^.\[[0-1];[0-9][0-9]mP" $1 | cut -b 11-20,22-27 | head -n 1` # skip byte 21, its the decimal
+echo $headPrinter
+tailPrinter=`grep "^.\[[0-1];[0-9][0-9]mP" $1 | cut -b 11-20,22-27 | tail -n 1` # skip byte 21, its the decimal
+echo $tailPrinter
+
+timeSpanP=$(($tailPrinter-$headPrinter))e-6
+echo $timeSpanP
+printf "Time Span: %.2f\n" $timeSpanP >> $1.Printer
+
+#find the number of machines (Step 2)
+
+# testing line just to output 0, 1, 2 to terminal - 3 machines
+# grep "^\[[0-1];[0-9][0-9]m[0-5]" $1 | cut -b 8 | sort -u
+
+# e for element (or Emma)
+for e in `grep "^\[[0-1];[0-9][0-9]m[0-5]" $1 | cut -b 8 | sort -u`
+do
+    # extract each machine messages (Step 2)
+    grep "^\[[0-1];[0-9][0-9]m$e" $1 > $1.$e 
+
+    headMonitor=`grep "^.\[[0-1];[0-9][0-9]m$e" $1 | cut -b 11-20,22-27 | head -n 1`
+    tailMonitor=`grep "^.\[[0-1];[0-9][0-9]m$e" $1 | cut -b 11-20,22-27 | tail -n 1`
+
+    timeSpanM=$(($tailMonitor-$headMonitor))e-6
+    echo $timeSpanM
+
+    printf "Monitor $e Time Span: %.2f" $timeSpanM >> $1.$e
+
+done
+
+
+
+

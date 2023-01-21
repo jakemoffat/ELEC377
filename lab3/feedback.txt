@@ -1,0 +1,7 @@
+Documentation 3
+Testing 0
+Correctness 2
+Clarity 2
+Total: 7
+
+"Good job but cannot exit the program via command ""exit"" (can only exit use ""exit"" twice). No test cases are found."

@@ -1,0 +1,13 @@
+Documentation 3/3
+-the pdf file was partially corrupted, try and avoid using this format, it can cause strange behavior
+    -I had to redownload the file from the repo
+
+Correctness 3/3
+
+
+Style 1.5/2
+-please avoid using the escape bytes in your code, it can cause strange behavior
+    -use the . instead
+    -eg: grep '^.\[[0-9];[0-9]*mR'
+
+Testing 2/2

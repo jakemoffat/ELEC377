@@ -1,0 +1,10 @@
+Documentation 3/3
+    Great!
+Code Correctness 3/3
+    You should be checking if proc_create returns NULL and returning -ENOMEM if so.
+    Looks good!
+Code Clarity 2/2
+    You should reference TASK_RUNNING, TASK_INTERRUPTIBLE, TASK_UNINTERRUPTIBLE and TASK_STOPPED rather than hard-coding values.
+    Looks good!
+Testing 1/2
+    It looks like you forgot to commit and push some of your test output files.
